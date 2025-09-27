@@ -1,26 +1,84 @@
 @import "tailwindcss";
 
+/* --- Velia Brand Vars --- */
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --velia-blue: #3B82F6;
+  --velia-purple: #8B5CF6;
+  --velia-ink: #111827;
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* --- Base look: soft blue fades, super subtle --- */
+body {
+  color: var(--velia-ink, #111827);
+  /* Stronger Base-blue presence */
+  background:
+    radial-gradient(1100px 520px at 50% -140px, rgba(59,130,246,0.26), transparent 62%),
+    radial-gradient(800px 420px at 100% 0, rgba(59,130,246,0.18), transparent 60%),
+    radial-gradient(700px 360px at -5% 85%, rgba(139,92,246,0.14), transparent 62%),
+    #f9fbff; /* slightly blue-tinted base instead of pure white */
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Optional: go even deeper site-wide by adding class="deep" on <html> */
+html.deep body {
+  background:
+    radial-gradient(1200px 560px at 50% -160px, rgba(59,130,246,0.34), transparent 64%),
+    radial-gradient(960px 520px at 100% 0, rgba(59,130,246,0.24), transparent 62%),
+    radial-gradient(820px 420px at -8% 85%, rgba(139,92,246,0.18), transparent 64%),
+    #f3f7ff;
+}
+
+/* Define Tailwind v4 tokens */
+@theme {
+  --color-velia-blue: #3B82F6;
+  --color-velia-purple: #8B5CF6;
+  --color-velia-ink: #111827;
+  --color-velia-amber: #F59E0B;
+  --color-velia-red: #EF4444;
+  --color-velia-green: #10B981;
+}
+
+@layer components {
+  .btn-primary {
+    @apply inline-flex items-center justify-center rounded-full px-4 py-1.5
+           text-white bg-blue-600 hover:bg-blue-700 active:bg-blue-700;
+  }
+  .btn-outline {
+    @apply inline-flex items-center justify-center rounded-full px-4 py-1.5
+           text-blue-600 border border-blue-600 hover:bg-blue-50;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+
+/* --- Reusable glass surface (cards, header/footer) --- */
+.glass {
+  background: rgba(255,255,255,0.72);
+  backdrop-filter: saturate(140%) blur(10px);
+  -webkit-backdrop-filter: saturate(140%) blur(10px);
+  border: 1px solid rgba(17,24,39,0.06);
 }
+
+/* --- Soft gradient hairlines --- */
+.gradient-hairline-b {
+  border-bottom: 1px solid transparent;
+  background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(59,130,246,0.35), rgba(0,0,0,0));
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: bottom left;
+}
+.gradient-hairline-t {
+  border-top: 1px solid transparent;
+  background-image: linear-gradient(to right, rgba(0,0,0,0), rgba(59,130,246,0.35), rgba(0,0,0,0));
+  background-repeat: no-repeat;
+  background-size: 100% 1px;
+  background-position: top left;
+}
+
+.glass {
+  background: rgba(255,255,255,0.78);
+  backdrop-filter: saturate(150%) blur(12px);
+  -webkit-backdrop-filter: saturate(150%) blur(12px);
+  border: 1px solid rgba(59,130,246,0.18);
+  box-shadow: 0 6px 24px rgba(59,130,246,0.10);
+}
+

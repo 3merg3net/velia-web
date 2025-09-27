@@ -1,0 +1,12 @@
+{
+  "name": "Velia.finance",
+  "short_name": "Velia",
+  "description": "Send & escrow crypto. Powered by $SYNC on Base.",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#3B82F6",
+  "icons": [
+    { "src": "/icon.png", "sizes": "512x512", "type": "image/png" }
+  ]
+}
