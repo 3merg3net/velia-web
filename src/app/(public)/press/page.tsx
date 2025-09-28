@@ -20,6 +20,18 @@ export default function PressPage() {
             <a className="mt-3 inline-block text-blue-600" href="/icon.png" download>Download PNG</a>
           </div>
         </div>
+        // src/app/(public)/press/page.tsx (add)
+<div className="mt-8 grid md:grid-cols-2 gap-6">
+  <a href="/velia-poster.png" download className="block border rounded-2xl p-4 bg-white/70">
+    <img src="/velia-poster.png" alt="Velia poster" className="rounded-lg" />
+    <div className="mt-2 text-blue-600 text-sm">Download poster (PNG)</div>
+  </a>
+  <a href="/roadmap-page.png" download className="block border rounded-2xl p-4 bg-white/70">
+    <img src="/roadmap-page.png" alt="Roadmap share image" className="rounded-lg" />
+    <div className="mt-2 text-blue-600 text-sm">Download roadmap (PNG)</div>
+  </a>
+</div>
+
 
         <div className="mt-8 border rounded-2xl p-6">
           <h3 className="font-semibold mb-2">Boilerplate</h3>

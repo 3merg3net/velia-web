@@ -1,32 +1,32 @@
 "use client";
 
-import { ReactNode, useMemo } from "react";
-import { WagmiProvider, createConfig, http } from "wagmi";
-import { RainbowKitProvider, getDefaultConfig, lightTheme } from "@rainbow-me/rainbowkit";
+import { WagmiProvider } from "wagmi";
 import { base, baseSepolia } from "wagmi/chains";
+import {
+  RainbowKitProvider,
+  getDefaultConfig,
+} from "@rainbow-me/rainbowkit";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@rainbow-me/rainbowkit/styles.css";
 
-export default function WalletProviders({ children }: { children: ReactNode }) {
-  const config = useMemo(() => {
-    return createConfig(
-      getDefaultConfig({
-        appName: "Velia.finance",
-        projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || "demo",
-        chains: [base, baseSepolia],
-        transports: {
-          [base.id]: http(),
-          [baseSepolia.id]: http(),
-        },
-        ssr: true,
-      })
-    );
-  }, []);
+const config = getDefaultConfig({
+  appName: "Velia.finance",
+  projectId: process.env.NEXT_PUBLIC_WC_PROJECT_ID || "demo",
+  chains: [base, baseSepolia],
+  ssr: true,
+});
 
+const queryClient = new QueryClient();
+
+export default function WalletProviders({ children }: { children: React.ReactNode }) {
   return (
     <WagmiProvider config={config}>
-      <RainbowKitProvider theme={lightTheme({ accentColor: "#3B82F6" })}>
-        {children}
-      </RainbowKitProvider>
+      <QueryClientProvider client={queryClient}>
+        <RainbowKitProvider>
+          {children}
+        </RainbowKitProvider>
+      </QueryClientProvider>
     </WagmiProvider>
   );
 }
+

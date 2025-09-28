@@ -1,75 +1,92 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import AuthGuard from "@/components/AuthGuard";
+import { absUrl } from "@/lib/abs-url";
+import Link from "next/link";
+import Copy from "@/components/Copy";
 
-export default function EscrowDetailPage() {
-  // When wired to contracts, read id via params and fetch state
-  const mock = {
-    id: "123456",
-    status: "Pending", // Pending | Funded | Claimed | Refunded
-    expiresIn: "5h 12m",
-    maker: { token: "USDC", amount: "200.00", funded: true },
-    taker: { token: "WETH", amount: "0.12", funded: false },
-    counterparty: "@charlie.eth",
-  };
+type EscrowRow = {
+  id: string;
+  maker: string;
+  taker: string;
+  token: string;
+  amount: string;
+  status: 0 | 1 | 2;
+  deadline: number; // ms
+};
 
-  const statusColor =
-    mock.status === "Pending"
-      ? "bg-amber-100 text-amber-700"
-      : mock.status === "Funded"
-      ? "bg-blue-100 text-blue-700"
-      : mock.status === "Claimed"
-      ? "bg-emerald-100 text-emerald-700"
-      : "bg-gray-100 text-gray-700";
+async function getEscrows(): Promise<EscrowRow[]> {
+  const res = await fetch(absUrl("/api/escrow"), { cache: "no-store" });
+  if (!res.ok) return [];
+  const json = (await res.json()) as { items: EscrowRow[] };
+  return json.items || [];
+}
+
+type Props = { params: Promise<{ id: string }> };
+
+export default async function EscrowDetailPage({ params }: Props) {
+  const { id } = await params; // ✅ Next 15 expects a Promise for params
+  const all = await getEscrows();
+  const escrow = all.find((e) => e.id.toLowerCase() === id.toLowerCase());
 
   return (
-    <main className="min-h-screen flex flex-col">
-      <Header />
-      <section className="max-w-2xl mx-auto flex-1 p-6">
-        <div className="flex items-center justify-between mb-4">
-          <h1 className="text-2xl font-bold">Escrow #{mock.id}</h1>
-          <span className={`px-3 py-1 rounded-full text-sm ${statusColor}`}>{mock.status}</span>
-        </div>
-        <p className="text-gray-600 mb-6">Counterparty: <span className="text-blue-600">{mock.counterparty}</span></p>
+    <AuthGuard>
+      <main className="min-h-screen flex flex-col">
+        <Header />
 
-        <div className="grid md:grid-cols-2 gap-6">
-          <div className="border rounded-2xl p-5">
-            <h3 className="font-semibold mb-2">Maker</h3>
-            <p className="text-gray-700">{mock.maker.amount} {mock.maker.token}</p>
-            <p className="text-sm mt-1">
-              Status: {mock.maker.funded ? <span className="text-emerald-600">Funded</span> : <span className="text-amber-600">Not funded</span>}
-            </p>
-          </div>
-          <div className="border rounded-2xl p-5">
-            <h3 className="font-semibold mb-2">Taker</h3>
-            <p className="text-gray-700">{mock.taker.amount} {mock.taker.token}</p>
-            <p className="text-sm mt-1">
-              Status: {mock.taker.funded ? <span className="text-emerald-600">Funded</span> : <span className="text-amber-600">Not funded</span>}
-            </p>
-          </div>
-        </div>
+        <section className="max-w-2xl mx-auto flex-1 p-6" id="escrow-detail">
+          {!escrow ? (
+            <div className="border rounded-2xl p-8 text-center bg-white/70">
+              <h1 className="text-xl font-semibold mb-2">Escrow not found</h1>
+              <p className="text-gray-600">It may not exist in the mock list.</p>
+              <Link href="/escrow" className="btn-primary mt-4 inline-block">Back to escrows</Link>
+            </div>
+          ) : (
+            <>
+              <h1 className="text-2xl font-bold">Escrow</h1>
+              <p className="text-gray-600 text-sm mt-1 break-all">
+                ID: {escrow.id}
+                <Copy text={escrow.id} />
+              </p>
 
-        <div className="mt-6 text-sm text-gray-600">
-          Expires in: <span className="font-medium text-gray-800">{mock.expiresIn}</span>
-        </div>
+              <div className="mt-6 border rounded-2xl p-6 space-y-4 bg-white/70">
+                <div className="grid grid-cols-2 gap-4">
+                  <div>
+                    <p className="text-xs text-gray-600">Maker</p>
+                    <p className="font-mono">{escrow.maker}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600">Taker</p>
+                    <p className="font-mono">{escrow.taker}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600">Amount</p>
+                    <p className="font-semibold">{escrow.amount} {escrow.token}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs text-gray-600">Deadline</p>
+                    <p>{new Date(escrow.deadline).toLocaleString()}</p>
+                  </div>
+                </div>
 
-        <div className="mt-6 flex flex-wrap gap-3">
-          <button className="bg-blue-500 text-white rounded-full px-6 py-3">Fund</button>
-          <button className="border border-blue-500 text-blue-500 rounded-full px-6 py-3">Accept</button>
-          <button className="border border-gray-300 text-gray-700 rounded-full px-6 py-3">Refund</button>
-          <button className="bg-emerald-500 text-white rounded-full px-6 py-3">Claim</button>
-          <a href="/escrow" className="border border-gray-300 text-gray-700 rounded-full px-6 py-3">Back</a>
-        </div>
+                <div className="pt-2 border-t" id="escrow-actions">
+                  <div className="flex gap-3">
+                    <button className="btn-primary">Release</button>
+                    <button className="btn-outline">Refund</button>
+                    <Link href="/escrow" className="btn-outline">Back</Link>
+                  </div>
+                  <p className="text-xs text-gray-500 mt-2">
+                    Actions are placeholders in dev; wire to contracts when deployed.
+                  </p>
+                </div>
+              </div>
+            </>
+          )}
+        </section>
 
-        <div className="mt-8 border rounded-2xl p-5">
-          <h3 className="font-semibold mb-2">Event Log (sample)</h3>
-          <ul className="text-sm text-gray-700 space-y-1">
-            <li>• DealOpened — maker 0x… created terms</li>
-            <li>• DealFunded — maker funded 200 USDC</li>
-            <li>• DealAccepted — awaiting taker funding</li>
-          </ul>
-        </div>
-      </section>
-      <Footer />
-    </main>
+        <Footer />
+      </main>
+    </AuthGuard>
   );
 }
+

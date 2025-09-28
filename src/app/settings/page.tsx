@@ -1,37 +1,53 @@
-// src/app/settings/page.tsx
+"use client";
+
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
+import { useEffect, useState } from "react";
+import { getDevBypass, setDevBypass } from "@/lib/dev";
 
 export default function SettingsPage() {
+  const [bypass, setBypass] = useState(false);
+
+  useEffect(() => {
+    setBypass(getDevBypass());
+    const handler = () => setBypass(getDevBypass());
+    window.addEventListener("velia:dev-bypass", handler);
+    return () => window.removeEventListener("velia:dev-bypass", handler);
+  }, []);
+
+  function toggleBypass() {
+    setDevBypass(!bypass);
+    setBypass(!bypass);
+  }
+
   return (
     <main className="min-h-screen flex flex-col">
       <Header />
-      <section className="max-w-2xl mx-auto flex-1 p-6">
+      <section className="max-w-3xl mx-auto flex-1 p-6">
         <h1 className="text-2xl font-bold mb-6">Settings</h1>
 
-        <div className="border rounded-2xl p-5 mb-6">
-          <h3 className="font-semibold mb-2">Notifications</h3>
-          <div className="flex items-center gap-2 text-sm text-gray-700">
-            <input id="notif" type="checkbox" className="h-4 w-4" defaultChecked />
-            <label htmlFor="notif">Enable transaction alerts</label>
+        <div className="border rounded-2xl p-6 bg-white/70 space-y-6">
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-semibold">Dev Bypass</p>
+              <p className="text-sm text-gray-600">Use the app without connecting a wallet (simulated sends & escrow).</p>
+            </div>
+            <button onClick={toggleBypass} className={`px-4 py-2 rounded-full ${bypass ? "bg-green-600 text-white" : "bg-gray-200"}`}>
+              {bypass ? "ON" : "OFF"}
+            </button>
           </div>
-        </div>
 
-        <div className="border rounded-2xl p-5 mb-6">
-          <h3 className="font-semibold mb-2">Privacy</h3>
-          <p className="text-gray-600 text-sm">Control how your handle and transactions appear.</p>
-          <div className="mt-3 flex gap-3">
-            <button className="border border-blue-500 text-blue-500 rounded-full px-5 py-2">Handle Visibility</button>
-            <button className="border border-gray-300 text-gray-700 rounded-full px-5 py-2">Export Data</button>
+          <div className="flex items-center justify-between">
+            <div>
+              <p className="font-semibold">Theme</p>
+              <p className="text-sm text-gray-600">Light / Dark (coming soon)</p>
+            </div>
+            <button className="btn-outline">System</button>
           </div>
-        </div>
-
-        <div className="border rounded-2xl p-5">
-          <h3 className="font-semibold mb-2">Danger Zone</h3>
-          <button className="border border-red-500 text-red-600 rounded-full px-5 py-2">Disconnect Wallet</button>
         </div>
       </section>
       <Footer />
     </main>
   );
 }
+
