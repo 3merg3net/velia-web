@@ -1,7 +1,9 @@
-// v4 plugin lives in @tailwindcss/postcss
+/** Vercel-safe PostCSS config for Tailwind v3.4 + Next 15 */
 module.exports = {
   plugins: {
     "@tailwindcss/postcss": {},
     autoprefixer: {},
   },
 };
+
+
