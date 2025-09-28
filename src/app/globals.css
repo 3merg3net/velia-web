@@ -1,5 +1,9 @@
 @import "tailwindcss";
 
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 /* --- Velia Brand Vars --- */
 :root {
   --velia-blue: #3B82F6;
