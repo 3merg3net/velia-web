@@ -4,9 +4,10 @@ import { useEffect, useState } from "react";
 import { getDevBypass, setDevBypass, isDevEnv } from "@/lib/dev";
 
 export default function DevBypass() {
+  // If env says no, render nothing (works on Preview/Prod)
   if (!isDevEnv()) return null;
-  const [on, setOn] = useState(false);
 
+  const [on, setOn] = useState(false);
   useEffect(() => {
     setOn(getDevBypass());
     const handler = () => setOn(getDevBypass());
@@ -24,6 +25,7 @@ export default function DevBypass() {
     </button>
   );
 }
+
 
 
 
