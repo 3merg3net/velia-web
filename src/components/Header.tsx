@@ -6,11 +6,11 @@ import { usePathname } from "next/navigation";
 import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 const nav = [
+ { href: "/sync", label: "$SYNC" },
+ { href: "/protocol", label: "Protocol" },
   { href: "/send", label: "Send" },
   { href: "/escrow", label: "Escrow" },
   { href: "/dashboard", label: "Dashboard" },
-  { href: "/protocol", label: "Protocol" },
-  { href: "/sync", label: "$SYNC" },
   { href: "/developers", label: "Developers" },
   { href: "/press", label: "Press" },
 ];

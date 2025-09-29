@@ -149,7 +149,7 @@ export default function SyncTokenPage() {
       <section id="poster" className="max-w-5xl mx-auto px-6 py-10">
         <div className="border rounded-2xl bg-white/80 p-3">
           <Image
-            src="/how-velia-works.png"
+            src="/sync-utility-page.png"
             alt="How Velia works — Send, Escrow, Claim/Refund"
             width={1200}
             height={720}

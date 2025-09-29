@@ -1,63 +1,38 @@
 import Header from "@/components/Header";
 import Footer from "@/components/Footer";
-import AuthGuard from "@/components/AuthGuard";
-import { absUrl } from "@/lib/abs-url";
+import DashboardClient from "./DashboardClient";
+import { Suspense } from "react";
 
-type TxItem = {
-  id: string;
-  type: "send" | "escrow";
-  from: string;
-  to: string;
-  amount: string;
-  token: string;
-  status: "confirmed" | "pending";
-  memo?: string;
-  time: number;
-};
+export const dynamic = "force-dynamic"; // avoid stale caches on preview
 
-async function getTx(): Promise<{ items: TxItem[] }> {
-  const res = await fetch(absUrl("/api/tx"), { cache: "no-store" });
-  return res.ok ? res.json() : { items: [] };
-}
-
-export default async function DashboardPage() {
-  const data = await getTx();
-
+export default function DashboardPage() {
   return (
-    <AuthGuard>
-      <main className="min-h-screen flex flex-col">
-        <Header />
-        <section className="max-w-2xl mx-auto flex-1 p-6">
-          <h1 className="text-2xl font-bold mb-6">Dashboard</h1>
+    <main className="min-h-screen flex flex-col">
+      <Header />
+      <section className="max-w-6xl mx-auto flex-1 p-6">
+        <h1 className="text-2xl font-bold">Dashboard</h1>
+        <p className="text-gray-600 mt-1">
+          Overview of your activity and quick actions.
+        </p>
 
-          {data.items.length ? (
-            <div className="space-y-3">
-              {data.items.map((t) => (
-                <div key={t.id} className="border rounded-xl px-4 py-3 flex justify-between bg-white/70">
-                  <div>
-                    <p className="font-medium capitalize">{t.type}</p>
-                    <p className="text-sm text-gray-600">{t.memo || "—"}</p>
-                  </div>
-                  <div className="text-right">
-                    <p className="font-semibold">
-                      {t.amount} {t.token}
-                    </p>
-                    <p className="text-sm text-gray-600">{t.status}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          ) : (
-            <div className="mt-6 border rounded-2xl p-8 text-center text-gray-600 bg-white/70">
-              No activity yet. <a href="/send" className="text-blue-600">Send your first payment</a>.
-            </div>
-          )}
-        </section>
-        <Footer />
-      </main>
-    </AuthGuard>
+        <div className="mt-6">
+          <Suspense
+            fallback={
+              <div className="border rounded-2xl p-6 bg-white/70">
+                <div className="h-5 w-40 bg-gray-100 rounded mb-3" />
+                <div className="h-5 w-64 bg-gray-100 rounded" />
+              </div>
+            }
+          >
+            <DashboardClient />
+          </Suspense>
+        </div>
+      </section>
+      <Footer />
+    </main>
   );
 }
+
 
 
 

@@ -16,7 +16,7 @@ export default function PressPage() {
             <a className="mt-3 inline-block text-blue-600" href="/logo-full.png" download>Download PNG</a>
           </div>
           <div className="border rounded-2xl p-6 text-center">
-            <Image src="/icon.png" alt="Velia icon" width={120} height={120} className="mx-auto" />
+            <Image src="/logo1.png" alt="Velia icon" width={120} height={120} className="mx-auto" />
             <a className="mt-3 inline-block text-blue-600" href="/icon.png" download>Download PNG</a>
           </div>
         </div>

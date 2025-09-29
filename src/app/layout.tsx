@@ -1,5 +1,5 @@
-import type { Metadata } from "next";
 import "./globals.css";
+import type { Metadata } from "next";
 import Providers from "./providers";
 import BackgroundFX from "@/components/BackgroundFX";
 import { Toaster } from "sonner";
