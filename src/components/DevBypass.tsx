@@ -1,15 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getDevBypass, setDevBypass } from "@/lib/dev";
+import { getDevBypass, setDevBypass, isDevEnv } from "@/lib/dev";
 
 export default function DevBypass() {
-  // hide in production unless explicitly enabled via env
-  const allow =
-    process.env.NODE_ENV !== "production" ||
-    process.env.NEXT_PUBLIC_DEV_BYPASS === "1";
-  if (!allow) return null;
-
+  if (!isDevEnv()) return null;
   const [on, setOn] = useState(false);
 
   useEffect(() => {
@@ -19,23 +14,16 @@ export default function DevBypass() {
     return () => window.removeEventListener("velia:dev-bypass", handler);
   }, []);
 
-  function toggle() {
-    const next = !on;
-    setDevBypass(next);
-    setOn(next);
-  }
-
   return (
     <button
-      onClick={toggle}
-      className={`fixed bottom-5 right-5 z-50 rounded-full px-3 py-1.5 text-xs shadow
-        ${on ? "bg-green-600 text-white" : "bg-gray-900 text-white/80"}`}
-      aria-pressed={on}
-      title="Toggle Dev Bypass"
+      onClick={() => setDevBypass(!on)}
+      className="fixed bottom-4 right-4 px-3 py-1.5 text-xs rounded-full border border-amber-500 text-amber-700 bg-amber-50 hover:bg-amber-100"
+      title="Dev bypass"
     >
-      {on ? "Dev Bypass: ON" : "Dev Bypass: OFF"}
+      Dev {on ? "ON" : "OFF"}
     </button>
   );
 }
+
 
 
