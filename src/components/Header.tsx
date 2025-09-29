@@ -6,11 +6,10 @@ import { ConnectButton } from "@rainbow-me/rainbowkit";
 
 export default function Header() {
   return (
-    // removed "sticky top-0 z-40"; header is now static
+    // static header (not sticky)
     <header className="glass gradient-hairline-b w-full">
-      {/* Top row */}
-      <div className="mx-auto max-w-6xl px-6 py-4 flex items-center">
-        {/* Left: logo */}
+      <div className="mx-auto max-w-6xl px-6 py-4 flex items-center gap-3">
+        {/* Logo */}
         <Link href="/" className="flex items-center gap-2">
           <Image
             src="/logo-full.png"
@@ -21,29 +20,25 @@ export default function Header() {
           />
         </Link>
 
-        {/* Center: desktop nav */}
+        {/* Center nav: desktop only */}
         <nav className="hidden md:flex gap-6 text-sm font-medium mx-auto">
-          <Link href="/sync">$SYNC</Link>
-          <Link href="/protocol">Protocol</Link>
           <Link href="/send">Send</Link>
           <Link href="/escrow">Escrow</Link>
-           </nav>
+          <Link href="/sync">$SYNC</Link>
+          <Link href="/protocol">Protocol</Link>
+        </nav>
 
-        {/* Right: desktop actions */}
-        <div className="hidden md:flex items-center gap-3">
-          <Link href="/buy" className="btn-outline text-sm">Buy Crypto</Link>
-          <ConnectButton label="Connect" showBalance={false} chainStatus="icon" />
-        </div>
-
-        {/* Spacer so logo isn't jammed when actions hidden on mobile */}
-        <div className="flex-1 md:hidden" />
-      </div>
-
-      {/* Mobile actions bar (ONLY mobile) */}
-      <div className="md:hidden border-t border-blue-100/50">
-        <div className="mx-auto max-w-6xl px-6 py-3 flex items-center justify-between">
-          <Link href="/buy" className="btn-outline text-sm">Buy Crypto</Link>
-          <ConnectButton label="Connect" showBalance={false} chainStatus="icon" />
+        {/* Actions: visible on ALL sizes, right-aligned */}
+        <div className="flex items-center gap-3 ml-auto">
+          <Link
+            href="/buy"
+            className="btn-outline text-xs md:text-sm px-3 py-2 md:px-5 md:py-2.5"
+          >
+            Buy Crypto
+          </Link>
+          <div className="[&>button]:text-xs md:[&>button]:text-sm">
+            <ConnectButton label="Connect" showBalance={false} chainStatus="icon" />
+          </div>
         </div>
       </div>
     </header>
